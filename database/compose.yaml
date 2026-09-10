@@ -1,0 +1,18 @@
+services:
+  kp_studio_db:
+    image: postgres:18
+    container_name: kp_studio_db
+
+  environment:
+    POSTGRES_DB: ${POSTGRES_DB}
+    POSTGRES_USER: ${POSTGRES_USER}
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "127.0.0.1:5433:5432"
+
+    volumes:
+      - kp_studio_data:/var/lib/postgresql
+
+volumes:
+  kp_studio_data:
