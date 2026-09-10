@@ -12,7 +12,8 @@ services:
       - "127.0.0.1:5433:5432"
 
     volumes:
-      - kp_studio_data:/var/lib/postgresql
+     - kp_studio_data:/var/lib/postgresql/data
+     - ./schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
 
 volumes:
   kp_studio_data:
