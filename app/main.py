@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
+from invite.router import router as invite_router
+
 app = FastAPI(title="Kenia Studio")
 
-@app.get("/")
-def home():
-    return {"message" : "Hello World"}
+app.include_router(invite_router)

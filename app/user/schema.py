@@ -8,3 +8,10 @@ Exemplo de uso:
     "ordem_exibicao": 1
 }
 """
+
+
+from pydantic import BaseModel
+
+class UsuarioEmailResponse(BaseModel):
+    id: int
+    email: str

@@ -199,3 +199,13 @@ CREATE TABLE agendamento (
 	    ) ON DELETE RESTRICT,
 	CHECK (data_hora_inicio < data_hora_fim)
 );
+
+CREATE TABLE convite (
+    id         INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    token      VARCHAR(64) NOT NULL UNIQUE,
+    tipo       VARCHAR(20) NOT NULL
+        CHECK (tipo IN ('ADMIN', 'PROFISSIONAL')),
+    criado_em  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    expira_em  TIMESTAMPTZ NOT NULL,
+    usado      BOOLEAN NOT NULL DEFAULT FALSE
+);
