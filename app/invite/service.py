@@ -60,7 +60,6 @@ def permitir_cadastro(token, senha):
     if convite["valido"] == False:
         raise ValueError(convite["mensagem"])           #gera erro, não deveria ter ninguem ali, tem q fechar abrupto
 
-
     if len(senha) < 8:
         raise ValueError("Senha muito curta")
     if len(senha) > 16:
