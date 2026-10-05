@@ -18,10 +18,6 @@ paralelo pela equipe.
 </p>
 
 <p align="center">
-  <em>API em execução e documentação interativa (Swagger)</em>
-</p>
-
-<p align="center">
   <img src="img/database.jpeg" width="90%" />
 </p>
 
