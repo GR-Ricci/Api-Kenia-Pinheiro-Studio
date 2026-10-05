@@ -12,8 +12,22 @@ paralelo pela equipe.
 
 ## 📸 Preview
 
-![API em execução](img/api.png)
-![Documentação Swagger](img/swagger.png)
+<p align="center">
+  <img src="img/back-end.jpeg" width="45%" />
+  <img src="img/swagger.jpeg" width="45%" />
+</p>
+
+<p align="center">
+  <em>API em execução e documentação interativa (Swagger)</em>
+</p>
+
+<p align="center">
+  <img src="img/database.jpeg" width="90%" />
+</p>
+
+<p align="center">
+  <em>Modelagem do banco de dados</em>
+</p>
 
 ---
 
@@ -57,6 +71,7 @@ Esse fluxo envolveu as quatro camadas do backend, servindo como base
 sólida para as próximas features do sistema.
 
 ---
+
 ## 🗄️ Modelagem do banco de dados
 
 O banco foi projetado para atender as regras de negócio do salão desde 
@@ -71,6 +86,8 @@ o início, considerando:
 - Uso de `ativo` (booleano) em vez de exclusão, preservando histórico
 
 O schema completo está em [`database/schema.sql`](database/schema.sql).
+
+---
 
 ## 🎨 Contribuições além do backend
 
@@ -98,29 +115,10 @@ projeto:
 
 ---
 
-## 📁 Estrutura do projeto
-
-Api-Kenia-Pinheiro-Studio/
-├── app/
-│   ├── invite/              # feature de convites e cadastro
-│   │   ├── model.py
-│   │   ├── schema.py
-│   │   ├── service.py
-│   │   └── router.py
-│   ├── database.py          # conexão com PostgreSQL
-│   └── main.py              # inicialização do FastAPI
-├── database/
-│   ├── compose.yaml         # configuração do Docker
-│   ├── schema.sql           # criação das tabelas
-│   └── .env.example
-└── requirements.txt
-
----
-
 ## 📌 Próximos passos
 
 - Autenticação com login e JWT
 - Middleware de permissão (ADMIN vs PROFISSIONAL)
 - Features de agendamento, profissionais e serviços
-- Área administrativa completa
+- Área administrativa completa para personalização completa do site
 - Integração com o front-end em Vue.js
