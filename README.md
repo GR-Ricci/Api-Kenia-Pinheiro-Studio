@@ -14,7 +14,7 @@ paralelo pela equipe.
 
 <p align="center">
   <img src="img/back-end.jpeg" width="45%" />
-  <img src="img/swagger.jpeg" width="45%" />
+  <img src="img/back-end-teste.jpeg" width="45%" />
 </p>
 
 <p align="center">
