@@ -22,12 +22,13 @@ paralelo pela equipe.
 </p>
 
 <p align="center">
+  <em>Modelagem do banco de dados</em>
+</p>
+<p align="center">
   <img src="img/database.jpeg" width="90%" />
 </p>
 
-<p align="center">
-  <em>Modelagem do banco de dados</em>
-</p>
+
 
 ---
 
