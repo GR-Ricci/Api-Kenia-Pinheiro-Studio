@@ -13,6 +13,10 @@ paralelo pela equipe.
 ## 📸 Preview
 
 <p align="center">
+  <em>Documentação API</em>
+</p>
+
+<p align="center">
   <img src="img/back-end.jpeg" width="45%" />
   <img src="img/back-end-teste.jpeg" width="45%" />
 </p>
