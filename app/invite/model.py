@@ -16,7 +16,6 @@ def criar_convite(token,tipo,expira_em):
     cursor.execute("INSERT INTO convite (token, tipo, expira_em ) VALUES(%s, %s, %s)",
                    (token,tipo,expira_em))
 
-
     conexao.commit()
     cursor.close()
     conexao.close()
@@ -42,7 +41,6 @@ def usar_convite(id_convite):
     conexao.commit()
     cursor.close()
     conexao.close()
-
 
 def criar_usuario(email, senha_hash, tipo):
     conexao = conect_database()
