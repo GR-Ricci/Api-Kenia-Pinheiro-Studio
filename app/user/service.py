@@ -44,7 +44,7 @@ def verificar_login(email, senha):
 
 def gerar_token(id_usuario, tipo):
 
-    tempo_expiracao = datetime.now(timezone.utc) + timedelta(hours=24)
+    tempo_expiracao = datetime.now(timezone.utc) + timedelta(days=7)
 
     payload = {
         "id": id_usuario,
