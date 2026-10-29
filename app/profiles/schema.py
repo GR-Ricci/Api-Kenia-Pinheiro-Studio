@@ -42,4 +42,3 @@ class ProfileUpdate(BaseModel):
     nome: Nullable = None
     bio: Nullable = None
     imagem_url: Nullable = None
-
