@@ -8,3 +8,19 @@ Exemplo de uso:
     "ordem_exibicao": 1
 }
 """
+
+from pydantic import BaseModel
+
+
+#Tag (botões de filtro)
+
+class TagResponse(BaseModel):
+    id: int
+    nome: str
+
+#Foto da galeria
+
+class GaleriaResponse(BaseModel):
+    id: int
+    imagem_url: str
+    tags: list[str]             #nomes das tags da foto
