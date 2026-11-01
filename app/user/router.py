@@ -22,10 +22,8 @@ def login(dados: LoginRequest):
         raise HTTPException(status_code=400, detail=str(erro))
 
 
-
 @router.get("/teste") # Rota de teste (cobaia)
 def testar_login(usuario_logado = Depends(validar_token)):
-    # Se chegou aqui, o Porteiro deixou passar!
     return {
         "mensagem": "Você está autenticado!",
         "dados_do_token": usuario_logado # Vai mostrar o id e o tipo que estavam no token
