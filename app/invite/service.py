@@ -25,7 +25,7 @@ def gerar_convite(tipo):
 
     return{
     "token": token,
-    "link": f"/cadastro?token={token}",
+    "link": f"/register?token={token}",
     "expira_em": expira_em
     }
 

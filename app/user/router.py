@@ -22,7 +22,7 @@ def login(dados: LoginRequest):
         raise HTTPException(status_code=400, detail=str(erro))
 
 
-@router.get("/teste") # Rota de teste (cobaia)
+@router.get("/teste") # Rota de teste
 def testar_login(usuario_logado = Depends(validar_token)):
     return {
         "mensagem": "Você está autenticado!",

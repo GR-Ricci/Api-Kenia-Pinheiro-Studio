@@ -6,20 +6,24 @@ GET /galeria
 POST /galeria
 """
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
 from invite.schema import ConviteRequest, CadastroRequest, ConviteResponse, CadastroResponse
 from invite import service
+from auth import validar_token
 
 
 router = APIRouter(tags=["Invite"])
 
 
 @router.post("/invites", response_model=ConviteResponse)
-def criar_convite(dados: ConviteRequest):             #dados = nome variavel   /  conviteRequest = nome schema
-    try:
+def criar_convite(dados: ConviteRequest, usuario_logado = Depends(validar_token)):             #dados = nome variavel   /  conviteRequest = nome schema
+   if usuario_logado["tipo"] != "ADMIN":
+       raise HTTPException(status_code=403, detail="Acesso negado")
+
+   try:
         return service.gerar_convite(dados.tipo)      #dado.tipo  = variavel
-    except ValueError as erro:
+   except ValueError as erro:
         raise HTTPException(status_code=400, detail=str(erro))
 
 
