@@ -46,13 +46,21 @@ def update_perfil(id_usuario_logado, dados):
     if not dados_novos:
         raise ValueError("Nenhum dado enviado para atualização")
 
-    nome_img = dados_novos.get("imagem_url")
-    if nome_img:
-        origem = PASTA_UPLOAD / "perfilpreview" / nome_img
-        if origem.exists():
-            (PASTA_UPLOAD / "perfil").mkdir(parents=True, exist_ok=True)
-            shutil.move(str(origem), str(PASTA_UPLOAD / "perfil" / nome_img))
+    # VERIFICA SE O PERFIL JÁ EXISTE
+    existente = model.get_usuario_logado(id_usuario_logado)
 
-    model.update_perfil(id_usuario_logado, dados_novos)
+    if existente is None:
+        # Se não existir, cria o perfil do zero
+        model.post_perfil(id_usuario_logado, dados)
+    else:
+        # Se já existir, faz o movimento da imagem e atualiza
+        nome_img = dados_novos.get("imagem_url")
+        if nome_img:
+            origem = PASTA_UPLOAD / "perfilpreview" / nome_img
+            if origem.exists():
+                (PASTA_UPLOAD / "perfil").mkdir(parents=True, exist_ok=True)
+                shutil.move(str(origem), str(PASTA_UPLOAD / "perfil" / nome_img))
+
+        model.update_perfil(id_usuario_logado, dados_novos)
 
     return obter_perfil(id_usuario_logado)

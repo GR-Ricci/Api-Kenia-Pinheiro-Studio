@@ -16,6 +16,7 @@ def vincular(id_profissional, dados):
         dados.imagem_url,
         dados.preco,
         dados.duracao_minutos,
+        dados.descricao,
     )
 
     return {
@@ -28,6 +29,7 @@ def vincular(id_profissional, dados):
         "preco": dados.preco,
         "duracao_minutos": dados.duracao_minutos,
         "ativo": True,
+        "descricao": dados.descricao,
     }
 
 
@@ -48,9 +50,10 @@ def atualizar_vinculo(id_profissional, id_subservico, dados):
     nova_duracao = dados.duracao_minutos if dados.duracao_minutos is not None else atual["duracao_minutos"]
     novo_ativo = dados.ativo if dados.ativo is not None else atual["ativo"]
     nova_imagem = dados.imagem_url if dados.imagem_url is not None else atual["imagem_url"]
+    nova_descricao = dados.descricao if dados.descricao is not None else atual["descricao"]
 
     model.atualizar_vinculo(
-        id_profissional, id_subservico, nova_imagem, novo_preco, nova_duracao, novo_ativo
+        id_profissional, id_subservico, nova_imagem, novo_preco, nova_duracao, novo_ativo, nova_descricao
     )
 
     info = model.obter_info_subservico(id_subservico)
@@ -64,6 +67,7 @@ def atualizar_vinculo(id_profissional, id_subservico, dados):
         "preco": novo_preco,
         "duracao_minutos": nova_duracao,
         "ativo": novo_ativo,
+        "descricao": nova_descricao,
     }
 
 

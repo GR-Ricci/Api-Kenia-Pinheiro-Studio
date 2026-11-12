@@ -2,7 +2,7 @@ import shutil
 from pathlib import Path
 from catalog.service import model
 
-PASTA_UPLOAD = Path(__file__).resolve().parents[2] / "upload"
+PASTA_UPLOAD = Path(__file__).resolve().parent.parent.parent.parent / "upload"
 PASTA_PREVIEW = PASTA_UPLOAD / "servicopreview"
 PASTA_SERVICO = PASTA_UPLOAD / "servico"
 
@@ -13,10 +13,15 @@ def criar_servico(dados):
 
     if dados.imagem_url:
         origem = PASTA_PREVIEW / dados.imagem_url
-        if not origem.is_file():
-            raise ValueError(f"Imagem '{dados.imagem_url}' não encontrada.")
-        PASTA_SERVICO.mkdir(parents=True, exist_ok=True)
-        shutil.move(str(origem), str(PASTA_SERVICO / dados.imagem_url))
+        destino = PASTA_SERVICO / dados.imagem_url
+
+        # Se a imagem está no preview, move para a pasta final
+        if origem.is_file():
+            PASTA_SERVICO.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(origem), str(destino))
+        # Se não está no preview E não está na pasta final, aí sim dá erro
+        elif not destino.is_file():
+            raise ValueError(f"Imagem '{dados.imagem_url}' não encontrada nas pastas de upload.")
 
     id_servico = model.inserir_servico(dados.nome, dados.id_categoria, dados.imagem_url)
     nome_categoria = model.obter_nome_categoria(dados.id_categoria)
@@ -47,12 +52,16 @@ def atualizar(id_servico, dados):
     if model.verificar_servico_existente(dados.nome, dados.id_categoria, ignorar_id=id_servico):
         raise ValueError("Já existe um serviço com este nome nesta categoria.")
 
-    # Se veio imagem nova (UUID no preview), move pra pasta final
+    # Se veio imagem nova, tenta mover (mas não quebra se já estiver no lugar certo)
     if dados.imagem_url and dados.imagem_url != atual["imagem_url"]:
         origem = PASTA_PREVIEW / dados.imagem_url
+        destino = PASTA_SERVICO / dados.imagem_url
+
         if origem.is_file():
             PASTA_SERVICO.mkdir(parents=True, exist_ok=True)
-            shutil.move(str(origem), str(PASTA_SERVICO / dados.imagem_url))
+            shutil.move(str(origem), str(destino))
+        elif not destino.is_file():
+            raise ValueError(f"Imagem '{dados.imagem_url}' não encontrada nas pastas de upload.")
 
     model.atualizar_servico(
         id_servico, dados.nome, dados.id_categoria, dados.imagem_url, dados.ativo
