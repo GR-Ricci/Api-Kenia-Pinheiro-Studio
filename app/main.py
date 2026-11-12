@@ -14,6 +14,7 @@ from team.staff.router import router as staff_router
 from media.carousel.router import router as carousel_router
 from informative.about.router import router as about_router
 from informative.hours.router import router as hours_router
+from catalog.package.router import router as package_router
 
 #Upload Arquivos
 from pathlib import Path
@@ -24,7 +25,6 @@ app = FastAPI(title="Kenia Studio")
 app.include_router(invite_router)
 app.include_router(user_router)
 app.include_router(profiles_router)
-app.include_router(invite_router)
 app.include_router(upload_router)
 app.include_router(category_router)
 app.include_router(service_router)
@@ -36,6 +36,8 @@ app.include_router(staff_router)
 app.include_router(carousel_router)
 app.include_router(about_router)
 app.include_router(hours_router)
+app.include_router(package_router)
+
 
 #Config conexao entre front e back
 app.add_middleware(

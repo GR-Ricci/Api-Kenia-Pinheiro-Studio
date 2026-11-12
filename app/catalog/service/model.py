@@ -157,14 +157,16 @@ def deletar_servico_forcado(id_servico):
             )
         """, (id_servico,))
 
+        # Retorna ids de pacotes que tinham itens com subserviços deste serviço
         cursor.execute("""
             DELETE FROM pacote_item WHERE (id_profissional, id_subservico) IN (
                 SELECT ps.id_profissional, ps.id_subservico
                 FROM profissional_subservico ps
                 JOIN subservico sub ON ps.id_subservico = sub.id
                 WHERE sub.id_servico = %s
-            )
+            ) RETURNING id_pacote
         """, (id_servico,))
+        ids_pacotes_afetados = list({row[0] for row in cursor.fetchall()})
 
         cursor.execute("""
             DELETE FROM profissional_subservico WHERE (id_profissional, id_subservico) IN (
@@ -174,6 +176,14 @@ def deletar_servico_forcado(id_servico):
                 WHERE sub.id_servico = %s
             )
         """, (id_servico,))
+
+        # Pacotes que ficaram sem itens viram órfãos → remove
+        if ids_pacotes_afetados:
+            cursor.execute("""
+                DELETE FROM pacote
+                WHERE id = ANY(%s)
+                AND id NOT IN (SELECT DISTINCT id_pacote FROM pacote_item)
+            """, (ids_pacotes_afetados,))
 
         cursor.execute("DELETE FROM servico WHERE id = %s", (id_servico,))
         conexao.commit()

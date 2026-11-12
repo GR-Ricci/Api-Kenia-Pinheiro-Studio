@@ -1,4 +1,5 @@
 from catalog.profissional_subservice import model
+from catalog.package import model as pacote_model
 
 
 def vincular(id_profissional, dados):
@@ -69,4 +70,12 @@ def atualizar_vinculo(id_profissional, id_subservico, dados):
 def remover_vinculo(id_profissional, id_subservico):
     if not model.obter_vinculo(id_profissional, id_subservico):
         raise ValueError("Vínculo não encontrado.")
+
+    qtd_pacotes = pacote_model.contar_pacotes_usando_vinculo(id_profissional, id_subservico)
+    if qtd_pacotes > 0:
+        raise ValueError(
+            f"Este subserviço está em {qtd_pacotes} pacote(s). "
+            "Remova-o dos pacotes antes de desvincular."
+        )
+
     model.deletar_vinculo(id_profissional, id_subservico)

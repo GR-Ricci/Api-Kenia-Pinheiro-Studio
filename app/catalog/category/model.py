@@ -74,11 +74,9 @@ def contar_impacto_delete(id_categoria):
     conexao = conect_database()
     cursor = conexao.cursor()
 
-    # Serviços da categoria
     cursor.execute("SELECT COUNT(*) FROM servico WHERE id_categoria = %s", (id_categoria,))
     servicos = cursor.fetchone()[0]
 
-    # Subserviços (via join)
     cursor.execute("""
         SELECT COUNT(*) FROM subservico sub
         JOIN servico s ON sub.id_servico = s.id
@@ -86,7 +84,6 @@ def contar_impacto_delete(id_categoria):
     """, (id_categoria,))
     subservicos = cursor.fetchone()[0]
 
-    # Vínculos de profissionais
     cursor.execute("""
         SELECT COUNT(*) FROM profissional_subservico ps
         JOIN subservico sub ON ps.id_subservico = sub.id
@@ -95,7 +92,6 @@ def contar_impacto_delete(id_categoria):
     """, (id_categoria,))
     vinculos = cursor.fetchone()[0]
 
-    # Profissionais distintas
     cursor.execute("""
         SELECT COUNT(DISTINCT ps.id_profissional) FROM profissional_subservico ps
         JOIN subservico sub ON ps.id_subservico = sub.id
@@ -127,8 +123,7 @@ def deletar_categoria(id_categoria):
 def deletar_categoria_forcado(id_categoria):
     """
     Deleta categoria apagando TUDO em cascata:
-    agendamentos → pacote_itens → profissional_subservico → categoria (cascade em servico/subservico)
-    Tudo numa transação.
+    agendamentos → pacote_itens → profissional_subservico → pacotes → categoria
     """
     conexao = conect_database()
     cursor = conexao.cursor()
@@ -165,6 +160,14 @@ def deletar_categoria_forcado(id_categoria):
                 WHERE s.id_categoria = %s
             )
         """, (id_categoria,))
+
+        # 3.5 Pacotes da categoria (FK pacote.id_categoria é RESTRICT)
+        cursor.execute("""
+            DELETE FROM pacote_item WHERE id_pacote IN (
+                SELECT id FROM pacote WHERE id_categoria = %s
+            )
+        """, (id_categoria,))
+        cursor.execute("DELETE FROM pacote WHERE id_categoria = %s", (id_categoria,))
 
         # 4. Categoria (CASCADE apaga servico + subservico + carrossel)
         cursor.execute("DELETE FROM categoria WHERE id = %s", (id_categoria,))
