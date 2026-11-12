@@ -3,6 +3,7 @@ import jwt
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
+from acess.user import model
 
 load_dotenv()
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
@@ -16,10 +17,16 @@ def validar_token(credentials: HTTPAuthorizationCredentials = Depends(security))
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
 
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token expirado.")
 
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Token inválido.")
+
+    ativo = model.buscar_ativo(payload["id"])
+
+    if not ativo:
+        raise HTTPException(status_code=401, detail="Usuário desativado.")
+
+    return payload
