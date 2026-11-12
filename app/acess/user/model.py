@@ -5,7 +5,7 @@ def dados_login(email):
     conexao = conect_database()
     cursor = conexao.cursor()
 
-    cursor.execute("SELECT id, senha_hash, tipo, ativo FROM usuario WHERE email = %s", (email,))
+    cursor.execute("SELECT id, senha_hash, tipo, ativo, superadmin FROM usuario WHERE email = %s", (email,))
     dados_usuario = cursor.fetchone()
 
     cursor.close()

@@ -2,10 +2,7 @@ import shutil
 from pathlib import Path
 from team.profiles import model
 
-PASTA_UPLOAD = Path(__file__).resolve().parent.parent.parent / "upload"
-
-
-
+PASTA_UPLOAD = Path(__file__).resolve().parent.parent.parent.parent / "upload"
 
 def obter_perfil(id_usuario_logado):
     if id_usuario_logado is None:
@@ -24,30 +21,28 @@ def obter_perfil(id_usuario_logado):
     if nome is None:
         raise ValueError("Nome faltante")
 
-    return{
+    return {
         "id": id_profissional,
         "nome": nome,
         "bio": bio,
-        "imagem_url": imagem_url
+        "imagem_url": imagem_url,
     }
+
 
 def post_perfil(id_usuario_logado, dados):
-
     id_profissional = model.post_perfil(id_usuario_logado, dados)
 
-    return{
-        "id":id_profissional,
+    return {
+        "id": id_profissional,
         "nome": dados.nome,
         "bio": dados.bio,
-        "imagem_url": dados.imagem_url
+        "imagem_url": dados.imagem_url,
     }
 
-def update_perfil(id_usuario_logado, dados):
 
-    # 1. Transforma o Pydantic em dicionário e remove os campos nulos
+def update_perfil(id_usuario_logado, dados):
     dados_novos = dados.model_dump(exclude_none=True)
 
-    # 2. Se o dicionário ficar vazio (o front não mandou nada), a gente barra
     if not dados_novos:
         raise ValueError("Nenhum dado enviado para atualização")
 
@@ -55,8 +50,9 @@ def update_perfil(id_usuario_logado, dados):
     if nome_img:
         origem = PASTA_UPLOAD / "perfilpreview" / nome_img
         if origem.exists():
+            (PASTA_UPLOAD / "perfil").mkdir(parents=True, exist_ok=True)
             shutil.move(str(origem), str(PASTA_UPLOAD / "perfil" / nome_img))
 
-    model.update_perfil(id_usuario_logado, dados_novos) #não faz return, depois de atualizar tudo, usa o obter_perfil pra trazer tudo atualizado, coisas mdudadas e coisas antigas
+    model.update_perfil(id_usuario_logado, dados_novos)
 
-    return obter_perfil(id_usuario_logado) #chama a def responsavel por trazer o usuario (agr ja esta atualizado pós commit, e traz o return pois vai ser return do return
+    return obter_perfil(id_usuario_logado)

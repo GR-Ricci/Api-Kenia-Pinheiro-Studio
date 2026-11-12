@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from acess.invite.router import router as invite_router
 from acess.user.router import router as user_router
 from team.profiles.router import router as profiles_router
-from media.upload.router import router as upload_router
+from media.files.router import router as upload_router
 from catalog.category.router import router as category_router
 from catalog.service.router import router as service_router
 from catalog.subservice.router import router as subservice_router
