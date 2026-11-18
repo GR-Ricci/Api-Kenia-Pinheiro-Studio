@@ -23,25 +23,31 @@ def _resolve_id_prof(usuario_logado, id_prof_solicitado: int | None):
     if usuario_logado["tipo"] == "ADMIN":
         if id_prof_solicitado:
             return id_prof_solicitado
-        # Admin sem id explícito: usa o próprio (admin também tem perfil profissional)
+
+        # Admin sem id explícito: usa o próprio
         id_prof_proprio = model.obter_id_profissional_por_usuario(usuario_logado["id"])
+
+        # Se não tiver perfil, cria um automaticamente em vez de dar erro
         if not id_prof_proprio:
-            raise HTTPException(status_code=404, detail="Admin sem perfil profissional.")
+            id_prof_proprio = model.criar_perfil_basico(usuario_logado["id"])
+
         return id_prof_proprio
 
     # PROFISSIONAL
     id_prof_logado = model.obter_id_profissional_por_usuario(usuario_logado["id"])
     if not id_prof_logado:
         raise HTTPException(status_code=404, detail="Profissional não encontrado.")
+
     if id_prof_solicitado and id_prof_solicitado != id_prof_logado:
         raise HTTPException(status_code=403, detail="Você só pode acessar seus próprios dados.")
+
     return id_prof_logado
 
 
 @router.post("/profissional-subservicos", response_model=ProfissionalSubservicoResponse)
 def vincular_subservico(
-    dados: ProfissionalSubservicoRequest,
-    usuario_logado=Depends(validar_token),
+        dados: ProfissionalSubservicoRequest,
+        usuario_logado=Depends(validar_token),
 ):
     _requer_profissional_ou_admin(usuario_logado)
     id_prof = _resolve_id_prof(usuario_logado, dados.id_profissional)
@@ -63,8 +69,8 @@ def listar_meus_subservicos(usuario_logado=Depends(validar_token)):
     response_model=list[ProfissionalSubservicoResponse],
 )
 def listar_de_profissional(
-    id_profissional: int,
-    usuario_logado=Depends(validar_token),
+        id_profissional: int,
+        usuario_logado=Depends(validar_token),
 ):
     _requer_profissional_ou_admin(usuario_logado)
     id_prof = _resolve_id_prof(usuario_logado, id_profissional)
@@ -76,10 +82,10 @@ def listar_de_profissional(
     response_model=ProfissionalSubservicoResponse,
 )
 def atualizar_vinculo(
-    id_profissional: int,
-    id_subservico: int,
-    dados: ProfissionalSubservicoUpdateRequest,
-    usuario_logado=Depends(validar_token),
+        id_profissional: int,
+        id_subservico: int,
+        dados: ProfissionalSubservicoUpdateRequest,
+        usuario_logado=Depends(validar_token),
 ):
     _requer_profissional_ou_admin(usuario_logado)
     id_prof = _resolve_id_prof(usuario_logado, id_profissional)
@@ -91,9 +97,9 @@ def atualizar_vinculo(
 
 @router.delete("/profissional-subservicos/{id_profissional}/{id_subservico}")
 def remover_vinculo(
-    id_profissional: int,
-    id_subservico: int,
-    usuario_logado=Depends(validar_token),
+        id_profissional: int,
+        id_subservico: int,
+        usuario_logado=Depends(validar_token),
 ):
     _requer_profissional_ou_admin(usuario_logado)
     id_prof = _resolve_id_prof(usuario_logado, id_profissional)

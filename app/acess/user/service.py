@@ -10,28 +10,28 @@ load_dotenv()
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 
-def gerar_token(id_usuario, tipo):
 
+def gerar_token(id_usuario, tipo, superadmin):
     tempo_expiracao = datetime.now(timezone.utc) + timedelta(days=7)
 
     payload = {
         "id": id_usuario,
         "tipo": tipo,
-        "exp": tempo_expiracao
+        "superadmin": superadmin,      # ← NOVO
+        "exp": tempo_expiracao,
     }
 
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
-def verificar_login(email, senha):
-    #Não precisa chegar o email com if, pois email é tratado como tipagem no schema pela lib de email
 
+def verificar_login(email, senha):
     dados_usuario = model.dados_login(email)
 
     if dados_usuario is None:
         raise ValueError("E-mail ou senha incorretos")
 
-    id_usuario, senha_hash, tipo, ativo = dados_usuario
+    id_usuario, senha_hash, tipo, ativo, superadmin = dados_usuario   # ← +superadmin
 
     senha_valida = bcrypt.checkpw(senha.encode(), senha_hash.encode())
 
@@ -41,10 +41,11 @@ def verificar_login(email, senha):
     if not ativo:
         raise ValueError("Usuário não vinculado")
 
-    token_jwt = gerar_token(id_usuario, tipo)
+    token_jwt = gerar_token(id_usuario, tipo, superadmin)
 
-    return{
-        "access_token":token_jwt,
+    return {
+        "access_token": token_jwt,
         "tipo": tipo,
-        "id": id_usuario
+        "superadmin": superadmin,      # ← NOVO (útil pro front saber)
+        "id": id_usuario,
     }

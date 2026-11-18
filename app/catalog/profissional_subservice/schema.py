@@ -17,6 +17,7 @@ class ProfissionalSubservicoRequest(BaseModel):
     duracao_minutos: int
     imagem_url: Nullable = None
     id_profissional: int | None = None
+    descricao: Nullable = None
 
 
 class ProfissionalSubservicoUpdateRequest(BaseModel):
@@ -24,6 +25,7 @@ class ProfissionalSubservicoUpdateRequest(BaseModel):
     duracao_minutos: int | None = None
     imagem_url: Nullable = None
     ativo: bool | None = None
+    descricao: Nullable = None
 
 
 class ProfissionalSubservicoResponse(BaseModel):
@@ -36,3 +38,4 @@ class ProfissionalSubservicoResponse(BaseModel):
     preco: float
     duracao_minutos: int
     ativo: bool
+    descricao: Nullable = None

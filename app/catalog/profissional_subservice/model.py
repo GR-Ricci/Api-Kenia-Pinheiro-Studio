@@ -11,6 +11,20 @@ def obter_id_profissional_por_usuario(id_usuario):
     return resultado[0] if resultado else None
 
 
+def criar_perfil_basico(id_usuario):
+    conexao = conect_database()
+    cursor = conexao.cursor()
+    cursor.execute(
+        "INSERT INTO profissional (id_usuario, nome) VALUES (%s, %s) RETURNING id",
+        (id_usuario, "Admin")
+    )
+    id_prof = cursor.fetchone()[0]
+    conexao.commit()
+    cursor.close()
+    conexao.close()
+    return id_prof
+
+
 def verificar_vinculo_existente(id_profissional, id_subservico):
     conexao = conect_database()
     cursor = conexao.cursor()
@@ -24,16 +38,16 @@ def verificar_vinculo_existente(id_profissional, id_subservico):
     return resultado is not None
 
 
-def inserir_vinculo(id_profissional, id_subservico, imagem_url, preco, duracao_minutos):
+def inserir_vinculo(id_profissional, id_subservico, imagem_url, preco, duracao_minutos, descricao):
     conexao = conect_database()
     cursor = conexao.cursor()
     cursor.execute(
         """
         INSERT INTO profissional_subservico
-            (id_profissional, id_subservico, imagem_url, preco, duracao_minutos)
-        VALUES (%s, %s, %s, %s, %s)
+            (id_profissional, id_subservico, imagem_url, preco, duracao_minutos, descricao)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """,
-        (id_profissional, id_subservico, imagem_url, preco, duracao_minutos),
+        (id_profissional, id_subservico, imagem_url, preco, duracao_minutos, descricao),
     )
     conexao.commit()
     cursor.close()
@@ -64,7 +78,7 @@ def obter_vinculo(id_profissional, id_subservico):
     cursor = conexao.cursor()
     cursor.execute(
         """
-        SELECT imagem_url, preco, duracao_minutos, ativo
+        SELECT imagem_url, preco, duracao_minutos, ativo, descricao
         FROM profissional_subservico
         WHERE id_profissional = %s AND id_subservico = %s
         """,
@@ -80,19 +94,20 @@ def obter_vinculo(id_profissional, id_subservico):
         "preco": float(resultado[1]),
         "duracao_minutos": resultado[2],
         "ativo": resultado[3],
+        "descricao": resultado[4],
     }
 
 
-def atualizar_vinculo(id_profissional, id_subservico, imagem_url, preco, duracao_minutos, ativo):
+def atualizar_vinculo(id_profissional, id_subservico, imagem_url, preco, duracao_minutos, ativo, descricao):
     conexao = conect_database()
     cursor = conexao.cursor()
     cursor.execute(
         """
         UPDATE profissional_subservico
-        SET imagem_url = %s, preco = %s, duracao_minutos = %s, ativo = %s
+        SET imagem_url = %s, preco = %s, duracao_minutos = %s, ativo = %s, descricao = %s
         WHERE id_profissional = %s AND id_subservico = %s
         """,
-        (imagem_url, preco, duracao_minutos, ativo, id_profissional, id_subservico),
+        (imagem_url, preco, duracao_minutos, ativo, descricao, id_profissional, id_subservico),
     )
     conexao.commit()
     cursor.close()
@@ -118,7 +133,7 @@ def listar_por_profissional(id_profissional):
         """
         SELECT ps.id_profissional, ps.id_subservico,
                sub.nome, s.nome, c.nome,
-               ps.imagem_url, ps.preco, ps.duracao_minutos, ps.ativo
+               ps.imagem_url, ps.preco, ps.duracao_minutos, ps.ativo, ps.descricao
         FROM profissional_subservico ps
         JOIN subservico sub ON ps.id_subservico = sub.id
         JOIN servico s ON sub.id_servico = s.id
@@ -142,6 +157,7 @@ def listar_por_profissional(id_profissional):
             "preco": float(r[6]),
             "duracao_minutos": r[7],
             "ativo": r[8],
+            "descricao": r[9],
         }
         for r in resultados
     ]

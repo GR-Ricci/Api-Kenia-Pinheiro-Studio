@@ -1,6 +1,5 @@
 from database import conect_database
 
-
 def listar_staff():
     conexao = conect_database()
     cursor = conexao.cursor()
@@ -12,7 +11,9 @@ def listar_staff():
             usuario.email,
             usuario.tipo,
             usuario.ativo,
-            profissional.imagem_url
+            profissional.imagem_url,
+            profissional.bio,
+            usuario.superadmin
         FROM usuario
         LEFT JOIN profissional ON profissional.id_usuario = usuario.id
         ORDER BY
@@ -35,10 +36,11 @@ def listar_staff():
             "tipo": r[4],
             "ativo": r[5],
             "imagem_url": r[6],
+            "bio": r[7],
+            "superadmin": r[8],
         }
         for r in resultados
     ]
-
 
 def obter_staff_completo(id_usuario):
     conexao = conect_database()
@@ -51,7 +53,9 @@ def obter_staff_completo(id_usuario):
             usuario.email,
             usuario.tipo,
             usuario.ativo,
-            profissional.imagem_url
+            profissional.imagem_url,
+            profissional.bio,
+            usuario.superadmin
         FROM usuario
         LEFT JOIN profissional ON profissional.id_usuario = usuario.id
         WHERE usuario.id = %s
@@ -69,8 +73,9 @@ def obter_staff_completo(id_usuario):
         "tipo": resultado[4],
         "ativo": resultado[5],
         "imagem_url": resultado[6],
+        "bio": resultado[7],
+        "superadmin": resultado[8],
     }
-
 
 def obter_usuario(id_usuario):
     conexao = conect_database()
@@ -83,7 +88,6 @@ def obter_usuario(id_usuario):
         return None
     return {"id": resultado[0], "tipo": resultado[1], "ativo": resultado[2]}
 
-
 def atualizar_ativo(id_usuario, ativo):
     conexao = conect_database()
     cursor = conexao.cursor()
@@ -92,19 +96,16 @@ def atualizar_ativo(id_usuario, ativo):
     cursor.close()
     conexao.close()
 
-
 def deletar_usuario_completo(id_usuario):
     conexao = conect_database()
     cursor = conexao.cursor()
     try:
-        # 1. Busca profissional (se existir)
         cursor.execute(
             "SELECT id FROM profissional WHERE id_usuario = %s", (id_usuario,)
         )
         row = cursor.fetchone()
         id_prof = row[0] if row else None
 
-        # 2. Deleta dependências do profissional
         if id_prof:
             cursor.execute("DELETE FROM agendamento WHERE id_profissional = %s", (id_prof,))
             cursor.execute("DELETE FROM pacote_item WHERE id_profissional = %s", (id_prof,))
@@ -116,7 +117,6 @@ def deletar_usuario_completo(id_usuario):
             )
             cursor.execute("DELETE FROM profissional WHERE id = %s", (id_prof,))
 
-        # 3. Deleta o usuário (email some do banco)
         cursor.execute("DELETE FROM usuario WHERE id = %s", (id_usuario,))
 
         conexao.commit()
