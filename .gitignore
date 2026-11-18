@@ -1,6 +1,6 @@
 .venv/ 
 .env
-app/media/upload/
+upload/
 __pycache__/ 
 *.py[cod] 
 .pytest_cache/ 
