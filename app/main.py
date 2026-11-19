@@ -27,8 +27,6 @@ load_dotenv()
 
 app = FastAPI(title="Kenia Studio")
 
-CORS_ORIGINS = os.getenv("CORS_ORIGINS")
-
 app.include_router(invite_router)
 app.include_router(user_router)
 app.include_router(profiles_router)
@@ -46,10 +44,21 @@ app.include_router(about_router)
 app.include_router(hours_router)
 app.include_router(home_router)
 
+
+CORS_ORIGINS = os.getenv("CORS_ORIGINS")
+
+allow_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+if CORS_ORIGINS:                          # só adiciona se existir
+    allow_origins.append(CORS_ORIGINS)
+
 # Config conexão entre front e back
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", CORS_ORIGINS],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
