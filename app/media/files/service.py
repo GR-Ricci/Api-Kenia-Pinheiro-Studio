@@ -1,7 +1,8 @@
 import uuid
 from pathlib import Path
+import os
 
-PASTA_UPLOAD = Path(__file__).resolve().parent.parent.parent.parent / "upload"
+PASTA_UPLOAD = Path(os.getenv("UPLOAD_DIR", "/tmp/kenia-upload"))
 
 def salvar_arquivo(arquivo, category, id_usuario):
     extensao = Path(arquivo.filename).suffix
