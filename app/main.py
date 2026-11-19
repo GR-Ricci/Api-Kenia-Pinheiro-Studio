@@ -22,6 +22,9 @@ from informative.home.router import router as home_router
 from pathlib import Path
 from fastapi.staticfiles import StaticFiles
 
+from dotenv import load_dotenv
+load_dotenv()
+
 app = FastAPI(title="Kenia Studio")
 
 CORS_ORIGINS = os.getenv("CORS_ORIGINS")
