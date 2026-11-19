@@ -1,12 +1,15 @@
 name: CI
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
 
 permissions:
   contents: read
@@ -15,6 +18,7 @@ jobs:
   checks:
     name: Validate deploy package
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
