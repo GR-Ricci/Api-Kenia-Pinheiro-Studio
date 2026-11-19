@@ -11,5 +11,5 @@ if [ "$branch" = "main" ] || [ "$branch" = "develop" ]; then
   exit 1
 fi
 
-echo "Branch não foi autorizada para deploy: $branch"
+echo "Branch não autorizada para deploy: $branch"
 exit 0
