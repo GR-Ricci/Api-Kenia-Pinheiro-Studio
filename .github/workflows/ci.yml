@@ -37,7 +37,7 @@ jobs:
         run: python -m compileall -q app main.py
 
       - name: Prepare ephemeral upload directory
-        run: mkdir -p upload
+        run: mkdir -p upload && touch upload/.ci-placeholder
 
       - name: Import FastAPI application
         env:
