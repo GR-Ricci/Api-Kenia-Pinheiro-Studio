@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "bash scripts/vercel-build.sh",
+  "buildCommand": "mkdir -p upload",
   "functions": {
     "main.py": {
       "maxDuration": 60
