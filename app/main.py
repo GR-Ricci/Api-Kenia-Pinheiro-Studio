@@ -50,6 +50,7 @@ CORS_ORIGINS = os.getenv("CORS_ORIGINS")
 allow_origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "https://kenia-pinheiro-studio-develop.vercel.app"
 ]
 
 if CORS_ORIGINS:                          # só adiciona se existir
