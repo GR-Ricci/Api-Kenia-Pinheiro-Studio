@@ -1,9 +1,8 @@
 import shutil
 from pathlib import Path
 from catalog.service import model
-import os
 
-PASTA_UPLOAD = Path(os.getenv("UPLOAD_DIR", "/tmp/kenia-upload"))
+PASTA_UPLOAD = Path(__file__).resolve().parent.parent.parent.parent / "upload"
 PASTA_PREVIEW = PASTA_UPLOAD / "servicopreview"
 PASTA_SERVICO = PASTA_UPLOAD / "servico"
 

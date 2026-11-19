@@ -65,8 +65,7 @@ app.add_middleware(
 )
 
 # Config área Upload com local real do dispositivo para buscar no GET
-PASTA_UPLOAD = Path(os.getenv("UPLOAD_DIR", "/tmp/kenia-upload"))
-PASTA_UPLOAD.mkdir(parents=True, exist_ok=True)
+PASTA_UPLOAD = Path(__file__).resolve().parent.parent / "upload"
 app.mount("/upload", StaticFiles(directory=PASTA_UPLOAD), name="upload")
 
 print("CORS_ORIGINS env =", repr(os.getenv("CORS_ORIGINS")))

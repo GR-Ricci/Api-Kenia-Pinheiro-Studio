@@ -1,9 +1,8 @@
-import os
 import shutil
 from pathlib import Path
 from team.profiles import model
 
-PASTA_UPLOAD = Path(os.getenv("UPLOAD_DIR", "/tmp/kenia-upload"))
+PASTA_UPLOAD = Path(__file__).resolve().parent.parent.parent.parent / "upload"
 
 def obter_perfil(id_usuario_logado):
     if id_usuario_logado is None:

@@ -1,10 +1,9 @@
 import shutil
 from pathlib import Path
-import os
 
 from catalog.package import model
 
-PASTA_UPLOAD = Path(os.getenv("UPLOAD_DIR", "/tmp/kenia-upload"))
+PASTA_UPLOAD = Path(__file__).resolve().parents[3] / "upload"
 PASTA_PREVIEW = PASTA_UPLOAD / "pacotepreview"
 PASTA_PACOTE = PASTA_UPLOAD / "pacote"
 
