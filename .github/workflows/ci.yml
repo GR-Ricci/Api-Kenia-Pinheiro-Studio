@@ -54,6 +54,8 @@ jobs:
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_SCOPE: gabriel-ricci
+      API_PREVIEW_ALIAS: api-kenia-pinheiro-studio-develop.vercel.app
 
     steps:
       - name: Checkout
@@ -84,7 +86,38 @@ jobs:
         run: vercel build --token="${{ secrets.VERCEL_TOKEN }}"
 
       - name: Deploy Vercel Preview
-        run: vercel deploy --prebuilt --token="${{ secrets.VERCEL_TOKEN }}"
+        id: deploy_preview
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          deployment_url="$(
+            vercel deploy \
+              --prebuilt \
+              --token="${{ secrets.VERCEL_TOKEN }}"
+          )"
+
+          echo "Deployment individual criado:"
+          echo "$deployment_url"
+
+          if [[ ! "$deployment_url" =~ ^https:// ]]; then
+            echo "Não foi possível identificar a URL do deployment."
+            exit 1
+          fi
+
+          echo "deployment_url=$deployment_url" >> "$GITHUB_OUTPUT"
+
+      - name: Assign fixed Preview alias
+        run: |
+          vercel alias set \
+            "${{ steps.deploy_preview.outputs.deployment_url }}" \
+            "${API_PREVIEW_ALIAS}" \
+            --scope="${VERCEL_SCOPE}" \
+            --token="${{ secrets.VERCEL_TOKEN }}" \
+            --non-interactive
+
+          echo "API Preview fixa:"
+          echo "https://${API_PREVIEW_ALIAS}"
 
   deploy-production:
     name: Deploy Production (main)
