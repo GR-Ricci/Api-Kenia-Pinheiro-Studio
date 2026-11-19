@@ -35,6 +35,5 @@ sys.modules.setdefault("database", database_compat)
 
 # StaticFiles validates the directory during import. Keep the API source
 # unchanged while making the expected ephemeral directory available.
-UPLOAD_DIR.mkdir(exist_ok=True)
 
 from app.main import app  # noqa: E402
