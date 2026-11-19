@@ -48,9 +48,7 @@ jobs:
   deploy-preview:
     name: Deploy Preview (develop)
     needs: checks
-
     if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-
     runs-on: ubuntu-latest
 
     env:
@@ -60,6 +58,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -86,9 +89,7 @@ jobs:
   deploy-production:
     name: Deploy Production (main)
     needs: checks
-
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
     runs-on: ubuntu-latest
 
     environment:
@@ -101,6 +102,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
