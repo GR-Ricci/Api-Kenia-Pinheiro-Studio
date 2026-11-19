@@ -1,6 +1,7 @@
 import uuid
 from pathlib import Path
 
+
 PASTA_UPLOAD = Path(__file__).resolve().parent.parent.parent.parent / "upload"
 
 def salvar_arquivo(arquivo, category, id_usuario):

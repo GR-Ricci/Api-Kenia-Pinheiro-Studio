@@ -67,3 +67,6 @@ app.add_middleware(
 # Config área Upload com local real do dispositivo para buscar no GET
 PASTA_UPLOAD = Path(__file__).resolve().parent.parent / "upload"
 app.mount("/upload", StaticFiles(directory=PASTA_UPLOAD), name="upload")
+
+print("CORS_ORIGINS env =", repr(os.getenv("CORS_ORIGINS")))
+print("allow_origins     =", repr(["http://localhost:5173", "http://127.0.0.1:5173", os.getenv("CORS_ORIGINS")]))
